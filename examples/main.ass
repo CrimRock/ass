@@ -1,0 +1,6 @@
+import "stdio";
+
+// Entry point of whole program
+fn main() {
+    stdio::out << "Hello, World\n";
+}
