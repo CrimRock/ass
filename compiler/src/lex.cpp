@@ -7,6 +7,7 @@ ass::lexer::lexer(std::string input) {
     src = input + '\n';
     chr = 0;
     pos = -1;
+    line = 1;
     next_char();
 }
 
@@ -25,6 +26,7 @@ char ass::lexer::peek() {
 }
 
 void ass::lexer::abort(std::string message) {
+    std::cout << pos << std::endl;
     std::cout << "Lexing error. " << message << std::endl;
     std::exit(1);
 }
@@ -43,6 +45,13 @@ ass::token ass::lexer::get_token() {
         token = ass::token("*", ASTERISK);
     } else if (chr == '/') {
         token = ass::token("/", SLASH);
+    } else if (chr == ':') {
+        if (peek() == ':') {
+            next_char();
+            token = ass::token("::", DOUBLECOLON);
+        } else {
+            abort("Expected ::, got :" + peek() + std::string(", at line ") + std::to_string(line));
+        }
     } else if (chr == '=') {
         if (peek() == '=') {
             next_char();
@@ -54,9 +63,6 @@ ass::token ass::lexer::get_token() {
         if (peek() == '=') {
             next_char();
             token = ass::token(">=", GTEQ);
-        } else if (peek() == '>') {
-            next_char();
-            token = ass::token(">>", GTGT);
         } else {
             token = ass::token(">", GT);
         }
@@ -64,9 +70,6 @@ ass::token ass::lexer::get_token() {
         if (peek() == '=') {
             next_char();
             token = ass::token("<=", LTEQ);
-        } else if (peek() == '<') {
-            next_char();
-            token = ass::token("<<", LTLT);
         } else {
             token = ass::token("<", LT);
         }
@@ -77,11 +80,13 @@ ass::token ass::lexer::get_token() {
         } else {
             abort("Expected !=, got !" + peek() + std::string(", at line ") + std::to_string(line));
         }
+    } else if (chr == ',') {
+        token = ass::token(",", COMA);
     } else if (chr == '\"') {
         next_char();
         long start = pos;
 
-        while (chr != '\"' && src[pos - 1] != '\\') {
+        while (chr != '\"'/* && src[pos - 1] != '\\'*/) {
             if (chr == '\n')
                 abort("Illegal character in string, at line " + std::to_string(line));
             next_char();

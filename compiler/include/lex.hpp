@@ -12,15 +12,14 @@ namespace ass {
         STRING = 3,
         SEMICOLON = 4,
         DOUBLECOLON = 5,
-        LTLT = 6,
-        GTGT = 7,
+        LPAREN = 6,
+        RPAREN = 7,
+        LBRACKET = 8,
+        RBRACKET = 9,
+        COMA = 10,
         // Keywords
         FN = 101,
         IMPORT = 102,
-        LPAREN = 103,
-        RPAREN = 104,
-        LBRACKET = 105,
-        RBRACKET = 106,
         // Operators
         EQ = 201,
         PLUS = 202,
@@ -37,13 +36,13 @@ namespace ass {
 
     class token {
     public:
+        enum token_type type;
+        std::string text;
+
         token();
         token(std::string text, int type);
 
         static int check_if_keyword(std::string text);
-    private:
-        enum token_type type;
-        std::string text;
     };
 
     class lexer {

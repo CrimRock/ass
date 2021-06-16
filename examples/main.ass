@@ -1,6 +1,6 @@
-import "stdio";
+import "io";
 
 // Entry point of whole program
-fn main() {
-    stdio::out << "Hello, World\n";
+fn main() int {
+    io::write("Hello, World\n");
 }
